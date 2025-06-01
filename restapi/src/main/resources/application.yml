@@ -1,0 +1,43 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: RESTAPI
+  datasource:
+    url: jdbc:postgresql://postgres:5432/pedido_db
+    username: user
+    password: password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    config-url: /restapi/v3/api-docs/swagger-config
+    url: /restapi/v3/api-docs
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://registry:8761/eureka/
+  instance:
+    prefer-ip-address: false
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    show-details: "always"
+
+logging:
+  level:
+    org.springframework.cloud.netflix: DEBUG
