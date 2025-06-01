@@ -1,25 +1,56 @@
 server:
   port: 8080
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://eureka-server:8761/eureka/
-  instance:
-    hostname: gateway
 
 spring:
   application:
-    name: gateway
+    name: GATEWAY
   cloud:
     gateway:
       discovery:
         locator:
           enabled: true
-          lower-case-service-id: true
+          lowerCaseServiceId: true
       routes:
-        - id: sgp
-          uri: lb://sgp
+        - id: restapi_route
+          uri: lb://RESTAPI
           predicates:
-            - Path=/api/orders/**, /api/partners/**
+            - Path=/restapi/**
           filters:
             - StripPrefix=1
+
+        - id: restapi-api-docs
+          uri: lb://RESTAPI
+          predicates:
+            - Path=/v3/api-docs/**
+        - id: restapi-swagger-config
+          uri: lb://RESTAPI
+          predicates:
+            - Path=/v3/api-docs/swagger-config
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: RESTAPI
+        url: /restapi/v3/api-docs
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://registry:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.cloud.netflix: DEBUG

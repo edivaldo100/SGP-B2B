@@ -1,0 +1,44 @@
+@startuml
+' Define os tipos do C4 (versão simplificada, sem !includeurl)
+skinparam componentStyle rectangle
+
+' Pessoas
+actor dev as "Developer"
+
+' Sistema Principal
+node "Pedido System (Docker Compose)" {
+
+  node "API Gateway" as gateway {
+    [Spring Cloud Gateway]
+  }
+
+  node "Service Registry" as registry {
+    [Eureka Server]
+  }
+
+  node "REST APIs (Instâncias)" {
+    [REST API - Instância 1] as restapi1
+    [REST API - Instância 2] as restapi2
+    [REST API - Instância 3] as restapi3
+  }
+
+  database "PostgreSQL" as db
+}
+
+' Relações
+dev --> gateway : Acessa Swagger UI / API
+gateway --> registry : Descobre serviços
+gateway --> restapi1 : Roteia requisições
+gateway --> restapi2 : Roteia requisições
+gateway --> restapi3 : Roteia requisições
+
+restapi1 --> registry : Registra serviço
+restapi2 --> registry : Registra serviço
+restapi3 --> registry : Registra serviço
+
+restapi1 --> db : JDBC
+restapi2 --> db : JDBC
+restapi3 --> db : JDBC
+
+@enduml
+

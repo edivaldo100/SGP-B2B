@@ -1,12 +1,6 @@
-FROM maven:3.8.4-openjdk-17 AS build
+FROM openjdk:17-jdk-slim
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
-COPY . .
-RUN mvn package
-
-FROM openjdk:17
-WORKDIR /app
-COPY --from=build /app/target/sgp-0.0.1-SNAPSHOT.jar app.jar
-
+COPY target/*.jar app.jar
 EXPOSE 8080
-
 ENTRYPOINT ["java", "-jar", "app.jar"]

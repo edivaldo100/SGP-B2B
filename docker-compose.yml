@@ -1,44 +1,92 @@
-
 services:
   postgres:
     image: postgres:13-alpine
-    container_name: sgp-postgres
+    container_name: pedido-postgres
     environment:
-      POSTGRES_DB: sgppostgres
+      POSTGRES_DB: pedido_db
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    healthcheck: # Healthcheck para garantir que o banco de dados está pronto
-      test: ["CMD-SHELL", "pg_isready -U user -d sgppostgres"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d pedido_db"]
       interval: 5s
       timeout: 5s
       retries: 5
-
-  # Serviço Spring Boot
-  app:
-    #build: src/main/java/com/b2b/ordermanagement
-    build: .
-    container_name: sgp-app
+      start_period: 10s
+  registry:
+    build:
+      context: ./registry
+      dockerfile: Dockerfile
+    container_name: pedido-registry
     ports:
-      - "8080:8080"
+      - "8761:8761"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://registry:8761/eureka/
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8761/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
     depends_on:
       postgres:
-        condition: service_healthy # Garante que o PostgreSQL esteja saudável antes de iniciar a aplicação
+        condition: service_healthy
+  restapi:
+#    ports:
+#      - "8081:8080"
+    build:
+      context: ./restapi
+      dockerfile: Dockerfile
     environment:
-      # variáveis de ambiente
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/sgppostgres
+      SPRING_PROFILES_ACTIVE: default
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://registry:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/pedido_db
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
-      NOTIFICATION_SERVICE_MOCK_ENABLED: "true" # Habilita o mock de notificação
-    # Opcional: para ver logs mais detalhados do Spring Boot
-    # logging:
-    #   driver: "json-file"
-    #   options:
-    #     max-size: "10m"
-    #     max-file: "5"
-
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_APPLICATION_NAME: restapi
+      EUREKA_INSTANCE_HOSTNAME: restapi
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 90s
+    depends_on:
+      registry:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: pedido-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://registry:8761/eureka/
+      EUREKA_CLIENT_FETCH_REGISTRY: "true"
+      EUREKA_CLIENT_REGISTRY_FETCH_INTERVAL_SECONDS: 5
+      SPRING_APPLICATION_NAME: gateway
+      EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    depends_on:
+      registry:
+        condition: service_healthy
+      restapi:
+        condition: service_started
 volumes:
   postgres_data:
