@@ -20,6 +20,17 @@ cd /SGP-B2B
 ```sh
 	docker-compose up
 ```
+ou
+Start com docker-compose com 2 replicas
+
+remove:
+```sh
+	docker-compose down --volumes --remove-orphans
+```
+reinicia novamente:
+```sh
+	docker-compose up -d --build --force-recreate --scale restapi=2
+```
 
 ### Detalhes
 
