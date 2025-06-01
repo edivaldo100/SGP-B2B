@@ -43,9 +43,8 @@ services:
       dockerfile: Dockerfile
       args:
         MODULE_NAME: restapi
-    container_name: sgp-b2b-restapi-1
-    ports:
-      - "8080:8080"
+#    ports:
+#      - "8080:8080"
     environment:
       # Configurações para conectar ao PostgreSQL e ao Eureka Registry
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/sgpdb
@@ -63,7 +62,10 @@ services:
       timeout: 5s
       retries: 10
       start_period: 60s # Dá 60 segundos para a API iniciar e se registrar no Eureka
-
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
   gateway:
     build:
       context: .
