@@ -25,9 +25,9 @@ cd /SGP-B2B
 
 Eurika-server http://localhost:8761/
 
-swagger : http://localhost:8080/swagger-ui/index.html#/
+swagger : http://localhost/swagger-ui/index.html#/
 
-isAlive : http://localhost:8080/restapi/isAlive
+isAlive : http://localhost/restapi/isAlive
 ```sh
 curl -X 'GET' \
   'http://localhost:8080/restapi/isAlive' \
