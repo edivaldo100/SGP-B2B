@@ -83,3 +83,10 @@ curl -X 'GET' \
    ```
 ### Arquitetura proposta   
 ![](desenho.png)
+
+### Teste de carga K6 Grafana
+```sh
+docker-compose run --rm k6_tester
+   ```
+usando apenas 2 instancias 
+![](log-grafana.PNG)

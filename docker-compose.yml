@@ -88,6 +88,19 @@ services:
       timeout: 5s
       retries: 10
       start_period: 60s # Dá 60 segundos para o Gateway iniciar e descobrir serviços
+  k6_tester:
+    image: grafana/k6 # Imagem oficial do k6
+    volumes:
+      - ./test.js:/test.js # Mapeia seu script de teste para dentro do contêiner
+    command: run /test.js # Comando para executar o teste
+    # Se quiser que o k6 espere pelos outros serviços estarem saudáveis antes de rodar
+    depends_on:
+      gateway:
+        condition: service_healthy
+      restapi:
+        condition: service_healthy # Opcional, mas garante que as réplicas estão prontas
+    networks:
+      - default # Garante que o k6 esteja na mesma rede Docker dos seus outros serviços
 
 volumes:
   postgres_data: # Volume para persistência dos dados do PostgreSQL
