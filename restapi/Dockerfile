@@ -1,6 +1,13 @@
-FROM openjdk:17-jdk-slim
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
-VOLUME /tmp
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["sh", "-c", "java -jar app.jar"]
+FROM maven:3.9.6-eclipse-temurin-17 AS builder
+WORKDIR /app
+COPY pom.xml .
+COPY restapi/pom.xml restapi/
+COPY restapi/src restapi/src/
+
+RUN mvn -f restapi/pom.xml clean install -DskipTests
+
+FROM eclipse-temurin:17-jdk-alpine
+WORKDIR /app
+COPY --from=builder /app/restapi/target/*.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]

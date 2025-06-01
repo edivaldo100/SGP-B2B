@@ -4,12 +4,9 @@ server:
 spring:
   application:
     name: GATEWAY
+
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
-          lowerCaseServiceId: true
       routes:
         - id: restapi_route
           uri: lb://RESTAPI
@@ -17,7 +14,6 @@ spring:
             - Path=/restapi/**
           filters:
             - StripPrefix=1
-
         - id: restapi-api-docs
           uri: lb://RESTAPI
           predicates:
@@ -26,31 +22,18 @@ spring:
           uri: lb://RESTAPI
           predicates:
             - Path=/v3/api-docs/swagger-config
-
-springdoc:
-  swagger-ui:
-    urls:
-      - name: RESTAPI
-        url: /restapi/v3/api-docs
+        - id: restapi-swagger-ui-html
+          uri: lb://RESTAPI
+          predicates:
+            - Path=/swagger-ui.html
+        - id: restapi-swagger-ui-resources
+          uri: lb://RESTAPI
+          predicates:
+            - Path=/swagger-ui/**
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://registry:8761/eureka/
+      defaultZone: http://registry:8761/eureka
   instance:
-    prefer-ip-address: true
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: always
-
-logging:
-  level:
-    org.springframework.cloud.gateway: DEBUG
-    org.springframework.cloud.netflix: DEBUG
+    preferIpAddress: true
