@@ -13,6 +13,8 @@ Você foi designado para desenvolver um microserviço crítico para um sistema B
 1. Clone o repo
 ```sh
 git clone https://github.com/edivaldo100/SGP-B2B
+
+cd /SGP-B2B
 ```
 2. Start com docker-compose
 ```sh
