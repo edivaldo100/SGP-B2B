@@ -8,6 +8,12 @@ spring:
     username: user
     password: password
     driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 50 # Exemplo: 20 conexões máximas por instância do restapi
+      minimum-idle: 5       # Exemplo: 5 conexões ociosas mínimas
+      connection-timeout: 30000 # 30 segundos (tempo limite para obter uma conexão)
+      idle-timeout: 600000    # 10 minutos (tempo limite para conexões ociosas)
+      max-lifetime: 1800000   # 30 minutos (tempo máximo de vida de uma conexão)
   jpa:
     hibernate:
       ddl-auto: update
@@ -15,6 +21,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
 springdoc:
   api-docs:
     path: /v3/api-docs
