@@ -46,9 +46,16 @@ curl -X 'GET' \
 ```
 Criar Parceiro:
 ```sh 
-curl -X 'GET' \
-  'http://localhost:8080/restapi/api/partners' \
-  -H 'accept: */*'
+curl -X 'POST' \
+  'http://localhost/restapi/api/partners' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "id": 1,
+  "name": "string1",
+  "creditLimit": 1000000,
+  "currentCredit": 100000
+}'
 ```
 Consulta Parceiro
 ```sh
@@ -85,8 +92,15 @@ curl -X 'GET' \
 ![](desenho.png)
 
 ### Teste de carga K6 Grafana
+
+windows
 ```sh
-docker-compose run --rm k6_tester
+$env:K6_SCRIPT_FILE='test.js'; docker-compose run --rm k6_tester
    ```
+linux
+```sh
+K6_SCRIPT_FILE=test.js docker-compose run --rm k6_tester
+   ```
+
 usando apenas 2 instancias 
 ![](log-grafana.PNG)
