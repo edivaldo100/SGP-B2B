@@ -60,14 +60,14 @@ curl -X 'POST' \
 Consulta Parceiro
 ```sh
 curl -X 'GET' \
-  'http://localhost:8080/restapi/api/orders' \
+  'http://localhost/restapi/api/orders' \
   -H 'accept: */*'
    ```
    
 Criar um pedido
 ```sh
     curl -X 'POST' \
-  'http://localhost:8080/restapi/api/orders' \
+  'http://localhost/restapi/api/orders' \
   -H 'accept: */*' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -85,7 +85,7 @@ Criar um pedido
 Consulta pedidos
 ```sh
 curl -X 'GET' \
-  'http://localhost:8080/restapi/api/orders' \
+  'http://localhost/restapi/api/orders' \
   -H 'accept: */*'
    ```
 ### Arquitetura proposta   
