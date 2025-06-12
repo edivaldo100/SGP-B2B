@@ -9,5 +9,6 @@ public enum OrderStatus {
     EM_PROCESSAMENTO,
     ENVIADO,
     ENTREGUE,
-    CANCELADO
+    CANCELADO,
+    COMPLETO
 }

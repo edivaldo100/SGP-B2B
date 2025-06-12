@@ -26,4 +26,14 @@ public class Partner {
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal currentCredit; // Crédito disponível
+
+    @Version // add
+    private Long version; // Campo para o controle de versão otimista
+
+    public Partner(Long id, String name, BigDecimal creditLimit, BigDecimal currentCredit) {
+        this.id = id;
+        this.name = name;
+        this.creditLimit = creditLimit;
+        this.currentCredit = currentCredit;
+    }
 }

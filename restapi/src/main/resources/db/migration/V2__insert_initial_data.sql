@@ -1,4 +1,3 @@
--- V2__insert_initial_data.sql
 
 -- Inserindo dados na tabela partners
 INSERT INTO partners (name, credit_limit, current_credit) VALUES
@@ -17,16 +16,16 @@ INSERT INTO partners (name, credit_limit, current_credit) VALUES
 -- Inserindo dados na tabela orders (referenciando partners existentes)
 -- Nota: Os IDs dos parceiros serão 1, 2, ..., 10, pois são gerados sequencialmente pelo BIGSERIAL
 INSERT INTO orders (partner_id, total_value, status, created_at, updated_at) VALUES
-(1, 150.00, 'PENDING', NOW(), NOW()),
-(2, 250.00, 'COMPLETED', NOW(), NOW()),
-(3, 75.50, 'CANCELLED', NOW(), NOW()),
-(4, 300.00, 'PENDING', NOW(), NOW()),
-(5, 120.00, 'COMPLETED', NOW(), NOW()),
-(6, 400.00, 'PENDING', NOW(), NOW()),
-(7, 90.00, 'CANCELLED', NOW(), NOW()),
-(8, 200.00, 'COMPLETED', NOW(), NOW()),
-(9, 110.00, 'PENDING', NOW(), NOW()),
-(10, 180.00, 'COMPLETED', NOW(), NOW());
+(1, 150.00, 'PENDENTE', NOW(), NOW()),
+(2, 250.00, 'ENVIADO', NOW(), NOW()),
+(3, 75.50, 'APROVADO', NOW(), NOW()),
+(4, 300.00, 'PENDENTE', NOW(), NOW()),
+(5, 120.00, 'ENVIADO', NOW(), NOW()),
+(6, 400.00, 'PENDENTE', NOW(), NOW()),
+(7, 90.00, 'APROVADO', NOW(), NOW()),
+(8, 200.00, 'ENVIADO', NOW(), NOW()),
+(9, 110.00, 'PENDENTE', NOW(), NOW()),
+(10, 180.00, 'APROVADO', NOW(), NOW());
 
 
 -- Inserindo dados na tabela order_items (referenciando orders existentes)

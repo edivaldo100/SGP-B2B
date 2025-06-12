@@ -44,7 +44,7 @@ public class PartnerService {
         return toDTO(savedPartner);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public PartnerDTO getPartnerById(Long id) {
         Partner partner = partnerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Parceiro não encontrado com ID: " + id));

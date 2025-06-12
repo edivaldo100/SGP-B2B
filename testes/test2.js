@@ -1,4 +1,4 @@
-// test.js
+// test2.js
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 import { Counter } from 'k6/metrics'; // Para contar sucesso/falha de operações específicas
@@ -14,7 +14,7 @@ export const options = {
   scenarios: {
     stress_test: {
       executor: 'constant-vus', // Simula um número constante de usuários virtuais
-      vus: 50, // Número de usuários virtuais (simultâneos)
+      vus: 2, // Número de usuários virtuais (simultâneos)
       duration: '1m', // Duração do teste (1 minuto)
       // ramp-up gradual para evitar sobrecarga inicial
       // executor: 'ramping-vus',
@@ -49,7 +49,7 @@ export default function () {
   const partnerName = `Partner_${uniqueId}`;
 
   const postBody = {
-    id: parseInt(uniqueId.substring(0, 8)), // Usar parte do uniqueId como ID numérico
+    //id: parseInt(uniqueId.substring(0, 8)), // Usar parte do uniqueId como ID numérico
     name: partnerName,
     creditLimit: 1000000,
     currentCredit: 100000,

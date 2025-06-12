@@ -1,4 +1,3 @@
--- V1__create_tables.sql
 
 -- Tabela partners
 CREATE TABLE partners (
